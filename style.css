@@ -1,10 +1,32 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #1a252f;
+  background: radial-gradient(circle at 50% 50%, #003d73, #1a252f, #000428);
+  background-size: 300% 300%;
+  animation: waveBackground 5s ease-in-out infinite;
   color: #f0f0f0;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
+
+@keyframes waveBackground {
+  0% {
+    background-position: 50% 50%;
+  }
+  25% {
+    background-position: 60% 40%;
+  }
+  50% {
+    background-position: 50% 60%;
+  }
+  75% {
+    background-position: 40% 40%;
+  }
+  100% {
+    background-position: 50% 50%;
+  }
+}
+
 
 header,
 .logo-header {
@@ -296,6 +318,11 @@ main {
   padding-right: 10px;
 }
 
+.comments-scroll strong {
+  display: block;
+  margin-bottom: 12px;
+}
+
 .comments-list {
   flex: 1;
   overflow-y: auto;
@@ -303,6 +330,7 @@ main {
   padding-right: 10px;
   margin-bottom: 10px;
   border-top: 1px solid #333;
+  padding-top: 12px;
   /* firefox */
   scrollbar-width: thin;
   scrollbar-color: #00d8ff #1a252f;
@@ -327,12 +355,25 @@ main {
 }
 
 .comments-list p {
-  word-break: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 0.4rem;
-  border-bottom: 1px solid #c2c1c115;
-  padding-bottom: 0.3rem;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #2e2e2e;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  color: #eee;
+  font-size: 0.95rem;
+  word-wrap: break-word;         /* permite quiebre de palabra larga */
+  overflow-wrap: anywhere;       /* fuerza quiebre si es una cadena muy larga */
+  max-width: 100%;               /* evita desbordes */
+  line-height: 1.4;
+}
+
+.comments-list p strong {
+  color: #00d8ff;
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .close-btn {
@@ -387,11 +428,10 @@ main {
 }
 
 .comment-section-popup {
-  flex-shrink: 0;
-  margin-top: 10px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  margin-top: 1rem;
 }
 
 .comment-section-popup input {
@@ -418,6 +458,13 @@ main {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+}
+
+.comment-section-popup input,
+.comment-section-popup button {
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
 }
 
 .comment-section-popup button:hover {
