@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FotoRiversS</title>
-
   <link rel="icon" href="./img/favicon_io/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="style.css">
-  
 </head>
 <body>
 
@@ -17,9 +15,9 @@
 
   <main>
     <section id="upload-section">
-        <h2>Publicar nueva foto</h2>
-        <label for="photoInput" class="upload-btn">📤 Seleccionar y subir foto</label>
-        <input type="file" id="photoInput" accept="image/*" onchange="uploadPhoto()">
+      <h2>Publicar nueva foto</h2>
+      <label for="photoInput" class="upload-btn">📤 Seleccionar y subir foto</label>
+      <input type="file" id="photoInput" accept="image/*" onchange="uploadPhoto()">
     </section>
 
     <section id="gallery">
@@ -27,12 +25,29 @@
     </section>
   </main>
 
+  <!-- Popup de imagen -->
     <div id="popup" class="popup hidden">
-        <div class="popup-content">
-            <span class="close-btn" onclick="cerrarPopup()">✖</span>
-            <div class="popup-image" id="popupImage"></div>
-            <div class="popup-details" id="popupDetails"></div>
+    <div class="popup-content">
+        <span class="close-btn" onclick="cerrarPopup()">✖</span>
+
+        <img id="popupImage" src="" alt="Imagen ampliada">
+
+        <div id="popupDetails">
+        <p class="fecha-publicacion"></p>
+        <p><strong>❤️ Likes:</strong> <span class="popup-likes">0</span></p>
+
+        <div class="comments-scroll">
+            <h4>💬 <span style="color: #00d8ff;">Comentarios:</span></h4>
+            <div class="comments-list" id="popupCommentsList"></div>
         </div>
+
+        <div class="comment-section-popup">
+            <input type="text" id="popupNameInput" placeholder="Tu nombre (opcional)">
+            <input type="text" id="popupCommentInput" placeholder="Escribe un comentario">
+            <button id="popupCommentBtn">Comentar</button>
+        </div>
+        </div>
+    </div>
     </div>
 
   <script src="script.js"></script>
