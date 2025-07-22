@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FotoRiversS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>FotoRiversS</h1>
+  </header>
+
+  <main>
+    <section id="upload-section">
+      <h2>Sube una foto</h2>
+      <input type="file" id="photoInput" accept="image/*">
+      <button onclick="uploadPhoto()">Subir</button>
+    </section>
+
+    <section id="gallery">
+      <h2>Galería</h2>
+      <div id="photoContainer"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
