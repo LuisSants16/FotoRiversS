@@ -17,16 +17,23 @@
 
   <main>
     <section id="upload-section">
-      <h2>Sube una foto</h2>
-      <input type="file" id="photoInput" accept="image/*">
-      <button onclick="uploadPhoto()">Subir</button>
+        <h2>Publicar nueva foto</h2>
+        <label for="photoInput" class="upload-btn">📤 Seleccionar y subir foto</label>
+        <input type="file" id="photoInput" accept="image/*" onchange="uploadPhoto()">
     </section>
 
     <section id="gallery">
-      <h2>Galería</h2>
       <div id="photoContainer"></div>
     </section>
   </main>
+
+    <div id="popup" class="popup hidden">
+        <div class="popup-content">
+            <span class="close-btn" onclick="cerrarPopup()">✖</span>
+            <div class="popup-image" id="popupImage"></div>
+            <div class="popup-details" id="popupDetails"></div>
+        </div>
+    </div>
 
   <script src="script.js"></script>
 </body>
