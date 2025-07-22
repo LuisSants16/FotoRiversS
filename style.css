@@ -12,6 +12,31 @@ header {
   text-align: center;
 }
 
+.logo-header {
+  background: linear-gradient(90deg, #004e92, #000428);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.logo-header h1 {
+  font-size: 2.2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: 2px;
+}
+
+.logo-header .foto {
+  color: #00d8ff;
+}
+
+.logo-header .rivers {
+  color: #ffffff;
+}
+
+.logo-header .s {
+  color: #ff4f81;
+}
+
 main {
   padding: 1rem;
   max-width: 800px;
