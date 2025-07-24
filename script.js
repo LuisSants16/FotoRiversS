@@ -81,6 +81,20 @@ function abrirPopup(photo) {
   const popupImage = document.getElementById("popupImage")
   const popupDetails = document.getElementById("popupDetails")
 
+  popupImage.onload = function () {
+
+  const aspectRatio = popupImage.naturalWidth / popupImage.naturalHeight;
+  const maxHeight = window.innerHeight * 0.85;
+
+  if (aspectRatio > 2.5) {
+    popupImage.style.height = maxHeight + "px";
+    popupImage.style.width = "auto";
+  } else {
+    popupImage.style.height = "auto";
+    popupImage.style.width = "100%";
+  }
+}
+
   popupImage.src = photo.imageUrl
 
   popupDetails.innerHTML = `
@@ -111,7 +125,7 @@ function abrirPopup(photo) {
   `
 
   popup.classList.remove("hidden")
-  document.body.classList.add("popup-open") // ✅ Agregado aquí
+  document.body.classList.add("popup-open")
 }
 
 function addCommentFromPopup(photoId) {
@@ -130,12 +144,20 @@ function addCommentFromPopup(photoId) {
 
 function cerrarPopup() {
   document.getElementById("popup").classList.add("hidden")
-  document.body.classList.remove("popup-open") // ✅ Aquí se quita
+  document.body.classList.remove("popup-open")
 }
 
 function toggleMenu(photoId) {
-  const menu = document.getElementById(`menu-${photoId}`)
-  menu.classList.toggle('hidden')
+  const targetMenu = document.getElementById(`menu-${photoId}`);
+  const isOpen = !targetMenu.classList.contains("hidden");
+
+  document.querySelectorAll(".dropdown-menu").forEach(menu => {
+    menu.classList.add("hidden");
+  });
+
+  if (!isOpen) {
+    targetMenu.classList.remove("hidden");
+  }
 }
 
 function eliminarFoto(photoId) {
@@ -148,3 +170,9 @@ function eliminarFoto(photoId) {
 }
 
 renderPhotos()
+
+window.addEventListener("scroll", () => {
+  document.querySelectorAll(".dropdown-menu").forEach(menu => {
+    menu.classList.add("hidden");
+  });
+});
