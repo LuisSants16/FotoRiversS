@@ -1,3 +1,6 @@
+/* =========================
+   1) BASE / RESETEOS
+   ========================= */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: radial-gradient(circle at 50% 50%, #003d73, #1a252f, #000428);
@@ -10,24 +13,19 @@ body {
 }
 
 @keyframes waveBackground {
-  0% {
-    background-position: 50% 50%;
-  }
-  25% {
-    background-position: 60% 40%;
-  }
-  50% {
-    background-position: 50% 60%;
-  }
-  75% {
-    background-position: 40% 40%;
-  }
-  100% {
-    background-position: 50% 50%;
-  }
+  0% { background-position: 50% 50%; }
+  25% { background-position: 60% 40%; }
+  50% { background-position: 50% 60%; }
+  75% { background-position: 40% 40%; }
+  100% { background-position: 50% 50%; }
 }
 
+.hidden { display: none !important; }
+body.popup-open { overflow: hidden; }
 
+/* =========================
+   2) HEADER / LOGO
+   ========================= */
 header,
 .logo-header {
   background: linear-gradient(90deg, #003d73, #000428);
@@ -45,12 +43,18 @@ header,
 .logo-header .rivers { color: #ffffff; }
 .logo-header .s { color: #ff4f81; }
 
+/* =========================
+   3) LAYOUT PRINCIPAL
+   ========================= */
 main {
   max-width: 800px;
   margin: auto;
   padding: 1rem;
 }
 
+/* =========================
+   4) SUBIR / PUBLICAR
+   ========================= */
 #upload-section {
   background-color: #12212e;
   padding: 1.5rem;
@@ -60,13 +64,8 @@ main {
   margin-bottom: 2rem;
 }
 
-#upload-section h2 {
-  color: #00d8ff;
-}
-
-#photoInput {
-  display: none;
-}
+#upload-section h2 { color: #00d8ff; }
+#photoInput { display: none; }
 
 .upload-btn {
   background-color: #00d8ff;
@@ -79,11 +78,11 @@ main {
   cursor: pointer;
   transition: background 0.3s ease;
 }
+.upload-btn:hover { background-color: #00b5d3; }
 
-.upload-btn:hover {
-  background-color: #00b5d3;
-}
-
+/* =========================
+   5) GALERÍA / TARJETAS
+   ========================= */
 #photoContainer {
   display: flex;
   flex-direction: column;
@@ -113,6 +112,9 @@ main {
   color: #999;
 }
 
+/* =========================
+   6) ACCIONES DEL POST
+   ========================= */
 .acciones-post {
   display: flex;
   justify-content: space-between;
@@ -132,18 +134,17 @@ main {
 }
 
 .acciones-izquierda button:hover,
-.menu-btn:hover {
-  color: #00d8ff;
-}
+.menu-btn:hover { color: #00d8ff; }
 
-.menu-wrapper {
-  position: relative;
-}
+.menu-wrapper { position: relative; }
 
 .dropdown-menu {
   position: absolute;
   right: 0;
-  bottom: 35px; /* aparece arriba */
+  /* En tu base hay dos variantes (top o bottom).
+     Conservamos la apertura hacia arriba por usabilidad en posts bajos: */
+  bottom: 35px;         /* aparece arriba */
+  top: auto;            /* anula el top por si estaba definido */
   background: #1f2d3a;
   border: 1px solid #444;
   border-radius: 6px;
@@ -163,14 +164,12 @@ main {
   color: #eee;
   cursor: pointer;
 }
+.dropdown-menu button:hover { background-color: #2c3e50; }
 
-.dropdown-menu button:hover {
-  background-color: #2c3e50;
-}
-
-.comment {
-  margin-bottom: 12px;
-}
+/* =========================
+   7) COMENTARIOS EN TARJETA
+   ========================= */
+.comment { margin-bottom: 12px; }
 
 .comment-section-popup input,
 .comment-section input {
@@ -196,11 +195,8 @@ main {
   cursor: pointer;
   font-size: 0.95rem;
 }
-
 .comment-section-popup button:hover,
-.comment-section button:hover {
-  background-color: #003b70;
-}
+.comment-section button:hover { background-color: #003b70; }
 
 .username {
   display: block;
@@ -223,6 +219,9 @@ main {
   word-break: break-word;
 }
 
+/* =========================
+   8) POPUP (OVERLAY)
+   ========================= */
 .popup {
   display: flex;
   position: fixed;
@@ -234,10 +233,24 @@ main {
   overflow: hidden;
 }
 
+#popup {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.308);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* =========================
+   9) CONTENIDO DEL POPUP
+   ========================= */
 .popup-content {
   display: grid;
-  align-items: center;
-  grid-template-columns: auto 400px; /* Imagen usa lo que necesite, comentarios fijo */
+  /* versión base: dos columnas iguales; en móvil se ajusta al final */
+  grid-template-columns: auto 400px; /* Imagen auto, panel fijo */
   gap: 20px;
   max-width: 95vw;
   max-height: 90vh;
@@ -288,19 +301,6 @@ main {
   justify-content: space-between;
 }
 
-#popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.308);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
 #popupImage {
   max-height: 85vh;
   width: auto;
@@ -320,13 +320,31 @@ main {
   overflow: auto;
 }
 
+.close-btn {
+  position: absolute;
+  top: 10px; right: 15px;
+  font-size: 1.8rem;
+  color: white;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.popup-details p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+.popup-details strong { color: #00d8ff; }
+
+/* =========================
+   10) LISTA DE COMENTARIOS (POPUP)
+   ========================= */
 .comments-scroll {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 10px;
 }
-
 .comments-scroll strong {
   display: block;
   margin-bottom: 12px;
@@ -335,30 +353,23 @@ main {
 .comments-list {
   flex: 1;
   overflow-y: auto;
-  max-height: 300px; /* Ajusta el alto máximo si quieres más o menos espacio */
+  max-height: 300px;
   padding-right: 10px;
   margin-bottom: 10px;
   border-top: 1px solid #333;
   padding-top: 12px;
-  /* firefox */
-  scrollbar-width: thin;
-  scrollbar-color: #00d8ff #1a252f;
+  scrollbar-width: thin;                /* Firefox */
+  scrollbar-color: #00d8ff #1a252f;    /* Firefox */
 }
-
-.comments-list::-webkit-scrollbar {
-  width: 8px;
-}
-
+.comments-list::-webkit-scrollbar { width: 8px; }
 .comments-list::-webkit-scrollbar-track {
-  background: #1a252f; /* color del fondo del scroll */
+  background: #1a252f;
   border-radius: 4px;
 }
-
 .comments-list::-webkit-scrollbar-thumb {
-  background-color: #00d8ff; /* color del thumb (barra) */
+  background-color: #00d8ff;
   border-radius: 4px;
 }
-
 .comments-list::-webkit-scrollbar-thumb:hover {
   background-color: #00b5d3;
 }
@@ -372,12 +383,11 @@ main {
   border-radius: 12px;
   color: #eee;
   font-size: 0.95rem;
-  word-wrap: break-word;         /* permite quiebre de palabra larga */
-  overflow-wrap: anywhere;       /* fuerza quiebre si es una cadena muy larga */
-  max-width: 100%;               /* evita desbordes */
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
   line-height: 1.4;
 }
-
 .comments-list p strong {
   color: #00d8ff;
   margin-bottom: 0.3rem;
@@ -385,30 +395,9 @@ main {
   font-weight: 600;
 }
 
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.8rem;
-  color: white;
-  cursor: pointer;
-  z-index: 1000;
-}
-
-.popup-details p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #ccc;
-}
-
-.popup-details strong {
-  color: #00d8ff;
-}
-
-.hidden {
-  display: none !important;
-}
-
+/* =========================
+   11) COMENTARIOS EN PÁGINA (FUERA DEL POPUP)
+   ========================= */
 .comments {
   margin-top: 1rem;
   font-size: 0.9rem;
@@ -416,7 +405,6 @@ main {
   border-top: 1px solid #444;
   padding-top: 0.5rem;
 }
-
 .comments p {
   display: flex;
   align-items: flex-start;
@@ -429,62 +417,293 @@ main {
   word-break: break-word;
   color: #ddd;
 }
-
 .comments strong {
   color: #00d8ff;
   min-width: 70px;
   font-weight: 600;
 }
 
-.comment-section-popup {
+/* =========================
+   12) PESTAÑAS Y MODAL (TEXTO)
+   ========================= */
+/* Texto con mismo alto que las fotos (preview) */
+.post-texto {
+  height: 380px;                 /* mismo alto que .photo-card img */
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 18px;
+  box-sizing: border-box;
+
+  /* Preview: no desborda ni se sale */
+  overflow: hidden;              
+  white-space: pre-wrap;         /* respeta saltos y envuelve */
+  word-break: break-word;        /* corta palabras largas */
+  overflow-wrap: anywhere;       /* por si son caracteres sin espacios */
+
+  /* Centrado para cuando el texto es corto */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  position: relative;
+  margin: 0;                     /* evita saltos raros arriba */
+  cursor: pointer;               /* deja claro que se puede abrir */
+}
+
+/* Degradado abajo para indicar que hay más contenido */
+.post-texto::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 60px;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(to bottom, rgba(26,26,26,0), #1a1a1a 70%);
+}
+
+
+.tab-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  background-color: #111;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: gold;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.tab-btn:hover { background-color: #1f1f1f; }
+.tab-divider { width: 1px; background-color: gold; height: 24px; }
+
+.tab-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 1rem;
+  gap: 1rem;
 }
+.tab-content.hidden { display: none; }
 
-.comment-section-popup input {
-  width: 100%;
-  padding: 0.75rem;
+.modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.modal.hidden { display: none; }
+
+.modal-content {
+  background-color: #222;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.modal-content h3 {
+  text-align: center;
+  margin: 0;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+.modal-content textarea {
+  background-color: #333;
+  color: white;
   border: none;
-  border-radius: 5px;
-  background-color: #2c2c2c;
-  color: #fff;
-  font-size: 0.95rem;
-  outline: none;
+  padding: 12px;
+  border-radius: 8px;
+  resize: vertical;
+  font-size: 1rem;
+  height: 140px;
 }
-
-.comment-section-popup input::placeholder {
+.char-count {
+  text-align: right;
+  font-size: 0.9rem;
   color: #aaa;
 }
-
-.comment-section-popup button {
-  background-color: #00d8ff;
-  color: #000;
-  font-weight: bold;
-  border: none;
-  padding: 0.75rem;
-  border-radius: 5px;
+.color-bar {
+  background: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+  height: 8px;
+  border-radius: 4px;
+  position: relative;
+}
+.color-bar input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  background: transparent;
+  position: relative;
+  top: -6px;
+}
+.color-bar input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #000;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+}
+.close-modal {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 1.4rem;
+  cursor: pointer;
 }
 
-.comment-section-popup input,
-.comment-section-popup button {
-  width: 100%;
-  max-width: 500px;
-  box-sizing: border-box;
-}
+/* =========================
+   13) MEJORAS ADITIVAS / RESPONSIVE / ACCESIBILIDAD
+   (Estas reglas solo mejoran y no rompen tu base)
+   ========================= */
 
-.comment-section-popup button:hover {
-  background-color: #00b5d3;
-}
+/* Tarjetas responsive manteniendo max 500px */
+.photo-card { width: 100%; max-width: 500px; }
 
-.comment-section-popup input,
-.comment-section-popup button {
-  width: 100%;
-}
+/* Evitar que el menú se recorte por overflow de contenedores padres */
+.menu-wrapper { overflow: visible; }
 
-body.popup-open {
+/* ===== Modal CREAR FOTO (añadidos mínimos) ===== */
+.crear-foto { gap: 1rem; }
+.preview-foto {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  min-height: 320px;
+  display: flex; align-items: center; justify-content: center;
   overflow: hidden;
 }
+.preview-foto img {
+  max-width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  display: block;
+}
+.preview-placeholder {
+  text-align: center; color: #bbb;
+  display: flex; flex-direction: column; align-items: center; gap: .5rem;
+}
+.preview-placeholder .icono-camara { font-size: 2rem; }
+
+.controles-foto {
+  display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center;
+}
+.publicar-btn {
+  background-color: #00d8ff; color: #000;
+  font-weight: bold; border: none; padding: 0.75rem 1rem;
+  border-radius: 6px; cursor: pointer; transition: background-color .2s ease;
+}
+.publicar-btn:hover { background-color: #00b5d3; }
+
+.hidden { display: none !important; } /* ya la tienes, aquí por si acaso */
+
+/* Popup: cuando el post es solo texto, usar 1 columna ancha */
+.popup-content.solo-texto {
+  grid-template-columns: 1fr;
+  max-width: min(900px, 95vw);
+}
+
+/* Bloque de texto completo dentro del popup */
+.popup-texto {
+  background: #2e2e2e;
+  color: #eee;
+  padding: 14px 16px;
+  border-radius: 12px;
+
+  white-space: pre-wrap;      /* respeta saltos y envuelve */
+  word-break: break-word;     /* corta palabras largas */
+  overflow-wrap: anywhere;    /* por si son cadenas sin espacios */
+  line-height: 1.55;
+  font-size: 1rem;
+}
+
+/* Evitar scroll horizontal en el panel derecho del popup */
+#popupDetails { overflow-x: hidden; }
+
+/* Lona de TEXTO cuando no hay imagen (columna izquierda) */
+/* Lona de texto en popup con tamaño fijo */
+.popup-textbox {
+  width: 450px;          /* igual que el ancho de las imágenes */
+  height: 380px;         /* igual que la altura de las imágenes */
+  background: #2e2e2e;
+  color: #eee;
+  padding: 20px;
+  border-radius: 8px;
+
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  overflow-y: auto;      /* scroll si hay mucho texto */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* evita scroll horizontal en el panel derecho */
+#popupDetails { overflow-x: hidden; }
+
+/* Texto grande en popup con altura y ancho fijo */
+.popup-texto-fijo {
+  width: 450px;          /* mismo ancho que tus imágenes */
+  height: 380px;         /* misma altura que las imágenes */
+  background: #2e2e2e;
+  color: #eee;
+  padding: 20px;
+  border-radius: 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  overflow-y: auto;      /* scroll si hay mucho texto */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Popup responsive en móviles */
+@media (max-width: 768px) {
+  .popup-content {
+    grid-template-columns: 1fr; /* una columna */
+    max-height: 90vh;
+  }
+  #popupImage { max-height: 40vh; }
+  #popupDetails {
+    max-height: 50vh;
+    overflow: auto;
+  }
+}
+
+/* Estados de foco accesibles */
+.acciones-izquierda button:focus,
+.menu-btn:focus,
+.upload-btn:focus,
+.comment-section-popup button:focus {
+  outline: 2px solid #00d8ff;
+  outline-offset: 2px;
+}
+
+/* Si el usuario prefiere menos animaciones */
+@media (prefers-reduced-motion: reduce) { body { animation: none; } }
+
+/* Mejor tacto en móviles */
+.menu-btn,
+.upload-btn,
+.acciones-izquierda button,
+.comment-section-popup button { touch-action: manipulation; }

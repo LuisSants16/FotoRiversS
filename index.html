@@ -1,55 +1,120 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FotoRiversS</title>
-  <link rel="icon" href="./img/favicon_io/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FotoRiversS</title>
+    <link rel="icon" href="./img/favicon_io/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="logo-header">
+      <h1>
+        <span class="foto">Foto</span><span class="rivers">Rivers</span
+        ><span class="s">S</span>
+      </h1>
+    </header>
 
-  <header class="logo-header">
-    <h1><span class="foto">Foto</span><span class="rivers">Rivers</span><span class="s">S</span></h1>
-  </header>
+    <main>
+      <section id="upload-section">
+        <div class="tab-selector">
+          <button
+            id="tabBtnTexto"
+            class="tab-btn"
+            onclick="mostrarTab('texto')"
+          >
+            📝 TEXTO
+          </button>
+          <div class="tab-divider"></div>
+          <button
+            id="tabBtnFoto"
+            class="tab-btn active"
+            onclick="mostrarTab('foto')"
+          >
+            📷 FOTO
+          </button>
+        </div>
 
-  <main>
-    <section id="upload-section">
-      <h2>Publicar nueva foto</h2>
-      <label for="photoInput" class="upload-btn">📤 Seleccionar y subir foto</label>
-      <input type="file" id="photoInput" accept="image/*" onchange="uploadPhoto()">
-    </section>
+        <!-- Contenido del tab FOTO -->
+      <div id="tab-foto" class="tab-content"></div>
 
-    <section id="gallery">
-      <div id="photoContainer"></div>
-    </section>
-  </main>
+      </section>
 
-  <!-- Popup de imagen -->
+      <section id="gallery">
+        <div id="photoContainer"></div>
+      </section>
+    </main>
+
+    <!-- Popup -->
     <div id="popup" class="popup hidden">
-    <div class="popup-content">
+      <div class="popup-content">
         <span class="close-btn" onclick="cerrarPopup()">✖</span>
 
-        <img id="popupImage" src="" alt="Imagen ampliada">
+        <img id="popupImage" src="" alt="Imagen ampliada" />
+        <div id="popupText" class="popup-textbox hidden"></div> <!-- NUEVO -->
 
-        <div id="popupDetails">
-        <p class="fecha-publicacion"></p>
-        <p><strong>❤️ Likes:</strong> <span class="popup-likes">0</span></p>
-
-        <div class="comments-scroll">
-            <h4>💬 <span style="color: #00d8ff;">Comentarios:</span></h4>
-            <div class="comments-list" id="popupCommentsList"></div>
-        </div>
-
-        <div class="comment-section-popup">
-            <input type="text" id="popupNameInput" placeholder="Tu nombre (opcional)">
-            <input type="text" id="popupCommentInput" placeholder="Escribe un comentario">
-            <button id="popupCommentBtn">Comentar</button>
-        </div>
-        </div>
-    </div>
+        <div id="popupDetails"></div>
+      </div>
     </div>
 
-  <script src="script.js"></script>
-</body>
+    <!-- Modal para publicar TEXTO -->
+    <div id="modalTexto" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-modal" onclick="cerrarModalTexto()">✖</span>
+        <h3>CREAR PUBLICACIÓN</h3>
+
+        <textarea
+          id="modalTextoInput"
+          maxlength="250"
+          placeholder="Di algo..."
+          oninput="actualizarContador()"
+        ></textarea>
+        <div class="char-count"><span id="contador">0</span>/250</div>
+
+        <div class="color-bar">
+          <input type="range" min="0" max="360" value="0" id="colorRange" />
+        </div>
+
+        <button onclick="publicarDesdeModal()">Publicar</button>
+      </div>
+    </div>
+
+    <!-- Modal: CREAR FOTO -->
+    <div id="modalFoto" class="modal hidden">
+      <div class="modal-content crear-foto">
+        <span class="close-modal" onclick="cerrarModalFoto()">✖</span>
+        <h3>CREAR FOTO</h3>
+
+        <!-- Área de preview -->
+        <div class="preview-foto">
+          <img id="previewImagen" alt="Vista previa" class="hidden" />
+          <div id="previewPlaceholder" class="preview-placeholder">
+            <div class="icono-camara">📷</div>
+            <p>Selecciona una imagen para previsualizar</p>
+          </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="controles-foto">
+          <input
+            type="file"
+            id="inputFotoModal"
+            accept="image/*"
+            class="hidden"
+          />
+          <button
+            class="upload-btn"
+            onclick="document.getElementById('inputFotoModal').click()"
+          >
+            📤 Seleccionar imagen
+          </button>
+          <button class="publicar-btn" onclick="publicarDesdeModalFoto()">
+            Publicar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
 </html>
