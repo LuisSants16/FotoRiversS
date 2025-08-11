@@ -18,6 +18,40 @@ function nowFormatted() {
   );
 }
 
+// == Colores para texto ==
+let currentTextBg = "#f2f2f2";
+let currentTextFg = "#222";
+
+// HSL -> RGB
+function hslToRgb(h, s, l){
+  s /= 100; l /= 100;
+  const k = n => (n + h/30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = n => l - a * Math.max(-1, Math.min(k(n)-3, Math.min(9-k(n), 1)));
+  return [Math.round(255*f(0)), Math.round(255*f(8)), Math.round(255*f(4))];
+}
+
+// Determina negro/blanco según brillo (YIQ)
+function idealTextColorFromRgb(r,g,b){
+  const yiq = (r*299 + g*587 + b*114) / 1000;
+  return yiq >= 128 ? "#000" : "#fff";
+}
+
+// Aplica el color al textarea del modal
+function setModalTextColor(hue){
+  // puedes ajustar S y L si quieres más/menos saturación o luminosidad
+  const s = 85, l = 55;                      // vibrante y medio-claro
+  const [r,g,b] = hslToRgb(hue, s, l);
+  currentTextBg = `rgb(${r}, ${g}, ${b})`;
+  currentTextFg = idealTextColorFromRgb(r,g,b);
+
+  const ta = document.getElementById("modalTextoInput");
+  if (ta){
+    ta.style.backgroundColor = currentTextBg;
+    ta.style.color = currentTextFg;
+  }
+}
+
 /* -------------------- Publicar (FOTO) -------------------- */
 function publicar() {
   const fileInput = document.getElementById("photoInput");
@@ -51,6 +85,12 @@ function abrirModalTexto() {
   document.getElementById("modalTexto").classList.remove("hidden");
   document.getElementById("modalTextoInput").value = "";
   document.getElementById("contador").textContent = "0";
+
+  const slider = document.getElementById("colorRange");
+  if (slider){
+    slider.value = 0;           // hue inicial
+    setModalTextColor(0);
+  }
 }
 
 function cerrarModalTexto() {
@@ -64,15 +104,14 @@ function actualizarContador() {
 
 function publicarDesdeModal() {
   const text = (document.getElementById("modalTextoInput").value || "").trim();
-  if (!text) {
-    alert("Escribe algo para publicar");
-    return;
-  }
+  if (!text) { alert("Escribe algo para publicar"); return; }
 
   const post = {
     id: Date.now(),
     imageUrl: null,
     text,
+    bgColor: currentTextBg,     // << guarda colores
+    fgColor: currentTextFg,     // <<
     likes: 0,
     comments: [],
     date: nowFormatted(),
@@ -108,12 +147,10 @@ function renderPhotos() {
 
     const media =
       photo.imageUrl
-        ? `<img src="${photo.imageUrl}" alt="Foto subida" onclick='abrirPopup(${JSON.stringify(
-            photo
-          )})'>`
-        : `<p class="post-texto" onclick='abrirPopup(${JSON.stringify(
-            photo
-          )})'>${escapeHtml(photo.text || "")}</p>`;
+        ? `<img src="${photo.imageUrl}" alt="Foto subida" onclick='abrirPopup(${JSON.stringify(photo)})'>`
+        : `<p class="post-texto" style="background:${photo.bgColor||'#1a1a1a'};color:${photo.fgColor||'#eee'}"
+            onclick='abrirPopup(${JSON.stringify(photo)})'>${escapeHtml(photo.text||"")}</p>`;
+
 
     card.innerHTML = `
       ${media}
@@ -201,6 +238,10 @@ function abrirPopup(photo) {
     // Mostrar lona de texto, ocultar imagen
     popupImage.classList.add("hidden");
     popupImage.removeAttribute("src");
+    popupTextBox.classList.remove("hidden");
+    popupTextBox.textContent = photo.text || "";
+    popupTextBox.style.backgroundColor = photo.bgColor || "#f2f2f2";
+    popupTextBox.style.color = photo.fgColor || "#222";
 
     popupTextBox.classList.remove("hidden");
     popupTextBox.textContent = photo.text || ""; // seguro con escapeHtml si prefieres
@@ -268,6 +309,18 @@ document.addEventListener("click", (e) => {
 
 window.addEventListener("scroll", () => {
   document.querySelectorAll(".dropdown-menu").forEach((m) => m.classList.add("hidden"));
+});
+
+// Inicializa el slider y el fondo del modal de texto
+document.addEventListener("DOMContentLoaded", () => {
+  const slider = document.getElementById("colorRange");
+  if (slider){
+    // estado inicial
+    setModalTextColor(parseInt(slider.value || "0", 10));
+    slider.addEventListener("input", (e) => {
+      setModalTextColor(parseInt(e.target.value || "0", 10));
+    });
+  }
 });
 
 /* -------------------- Seguridad básica de texto -------------------- */
@@ -340,10 +393,4 @@ document.getElementById('inputFotoModal').addEventListener('change', (e) => {
   reader.readAsDataURL(file);
 });
 
-/* Abrir modal desde el botón del tab */
-document.getElementById('btnAbrirModalFoto')
-  .addEventListener('click', abrirModalFoto);
-
-
-/* -------------------- Inicio -------------------- */
-renderPhotos();
+document.addEventListener("DOMContentLoaded", renderPhotos);
