@@ -3,6 +3,8 @@
    ========================================================= */
 
 let photos = JSON.parse(localStorage.getItem("photos")) || [];
+let openPostId = null;
+const MAX_CHARS = 350;
 
 /* -------------------- Utilidades -------------------- */
 function savePhotos() {
@@ -81,25 +83,37 @@ function publicar() {
 }
 
 /* -------------------- Publicar (TEXTO - Modal) -------------------- */
+
 function abrirModalTexto() {
   document.getElementById("modalTexto").classList.remove("hidden");
-  document.getElementById("modalTextoInput").value = "";
-  document.getElementById("contador").textContent = "0";
+  document.body.classList.add("popup-open");
+
+  const ta = document.getElementById("modalTextoInput");
+  const contador = document.getElementById("contador");
+  if (ta) {
+    ta.value = "";
+    ta.setAttribute("maxlength", String(MAX_CHARS));
+  }
+  if (contador) contador.textContent = `0/${MAX_CHARS}`;
 
   const slider = document.getElementById("colorRange");
   if (slider){
-    slider.value = 0;           // hue inicial
+    slider.value = 0;
     setModalTextColor(0);
   }
 }
 
 function cerrarModalTexto() {
   document.getElementById("modalTexto").classList.add("hidden");
+  document.body.classList.remove("popup-open");
 }
 
 function actualizarContador() {
-  const text = document.getElementById("modalTextoInput").value || "";
-  document.getElementById("contador").textContent = text.length;
+  const ta = document.getElementById("modalTextoInput");
+  const contador = document.getElementById("contador");
+  const text = ta.value || "";
+  if (text.length > MAX_CHARS) ta.value = text.slice(0, MAX_CHARS);
+  contador.textContent = `${ta.value.length}/${MAX_CHARS}`;
 }
 
 function publicarDesdeModal() {
@@ -116,6 +130,7 @@ function publicarDesdeModal() {
     comments: [],
     date: nowFormatted(),
   };
+
 
   photos.unshift(post);
   savePhotos();
@@ -145,12 +160,19 @@ function renderPhotos() {
     card.className = "photo-card";
     card.id = "post-" + photo.id;
 
+    // En renderPhotos(): añade loading="lazy" y data-open
     const media =
       photo.imageUrl
-        ? `<img src="${photo.imageUrl}" alt="Foto subida" onclick='abrirPopup(${JSON.stringify(photo)})'>`
-        : `<p class="post-texto" style="background:${photo.bgColor||'#1a1a1a'};color:${photo.fgColor||'#eee'}"
-            onclick='abrirPopup(${JSON.stringify(photo)})'>${escapeHtml(photo.text||"")}</p>`;
+        ? `<img src="${photo.imageUrl}" alt="Foto subida" loading="lazy" data-open="${photo.id}">`
+        : `<p class="post-texto" style="background:${photo.bgColor||'#1a1a1a'};color:${photo.fgColor||'#eee'}" data-open="${photo.id}">${escapeHtml(photo.text||"")}</p>`;
 
+    // Listener global (una sola vez, cerca del DOMContentLoaded)
+    document.addEventListener('click', (e) => {
+      const id = e.target.closest('[data-open]')?.getAttribute('data-open');
+      if (!id) return;
+      const p = photos.find(x => String(x.id) === String(id));
+      if (p) abrirPopup(p);
+    });
 
     card.innerHTML = `
       ${media}
@@ -196,9 +218,15 @@ function compartirPost(id) {
 
 function toggleMenu(photoId) {
   const target = document.getElementById(`menu-${photoId}`);
-  const isOpen = !target.classList.contains("hidden");
-  document.querySelectorAll(".dropdown-menu").forEach((m) => m.classList.add("hidden"));
-  if (!isOpen) target.classList.remove("hidden");
+  const wasOpen = !target.classList.contains("hidden");
+  document.querySelectorAll(".dropdown-menu").forEach(m => m.classList.add("hidden"));
+  if (wasOpen) return;
+
+  target.classList.remove("hidden");
+  const rect = target.getBoundingClientRect();
+  target.style.top = ""; target.style.bottom = "";
+  if (rect.bottom > window.innerHeight) target.style.bottom = "35px";
+  else target.style.top = "35px";
 }
 
 function eliminarFoto(photoId) {
@@ -210,6 +238,9 @@ function eliminarFoto(photoId) {
 
 /* -------------------- Popup -------------------- */
 function abrirPopup(photo) {
+
+  openPostId = photo.id;
+
   const popup = document.getElementById("popup");
   const popupImage = document.getElementById("popupImage");
   const popupTextBox = document.getElementById("popupText");     // << nuevo
@@ -295,6 +326,9 @@ function addCommentFromPopup(photoId) {
 }
 
 function cerrarPopup() {
+
+  openPostId = null;
+
   document.getElementById("popup").classList.add("hidden");
   document.body.classList.remove("popup-open");
 }
@@ -309,6 +343,25 @@ document.addEventListener("click", (e) => {
 
 window.addEventListener("scroll", () => {
   document.querySelectorAll(".dropdown-menu").forEach((m) => m.classList.add("hidden"));
+});
+
+// Cerrar con ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    cerrarPopup();
+    cerrarModalTexto();
+    cerrarModalFoto();
+  }
+});
+
+// Enviar comentario con ENTER cuando el foco está en #popup-comment
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && e.target.id === 'popup-comment') {
+    if (openPostId !== null) {
+      e.preventDefault(); // evita efectos raros
+      addCommentFromPopup(openPostId);
+    }
+  }
 });
 
 // Inicializa el slider y el fondo del modal de texto

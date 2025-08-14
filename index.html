@@ -63,13 +63,9 @@
         <span class="close-modal" onclick="cerrarModalTexto()">✖</span>
         <h3>CREAR PUBLICACIÓN</h3>
 
-        <textarea
-          id="modalTextoInput"
-          maxlength="250"
-          placeholder="Di algo..."
-          oninput="actualizarContador()"
-        ></textarea>
-        <div class="char-count"><span id="contador">0</span>/250</div>
+       <textarea id="modalTextoInput" maxlength="350" placeholder="Di algo..." oninput="actualizarContador()"></textarea>
+
+        <div class="char-count"><span id="contador">0</span></div>
 
         <div class="color-bar">
           <input type="range" min="0" max="360" value="0" id="colorRange" />

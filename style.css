@@ -7,6 +7,7 @@ body {
   background-size: 300% 300%;
   animation: waveBackground 5s ease-in-out infinite;
   color: #f0f0f0;
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -173,7 +174,10 @@ main {
 
 .comment-section-popup input,
 .comment-section input {
-  width: 100%;
+  width: 100%;           /* 🔹 ocupar siempre todo el ancho disponible */
+  max-width: 100%;
+  box-sizing: border-box;/* 🔹 padding incluido en el ancho total */
+  
   padding: 10px;
   border: none;
   border-radius: 6px;
@@ -181,6 +185,7 @@ main {
   margin-bottom: 8px;
   background-color: #1f2d3a;
   color: #fff;
+  outline: none;
 }
 
 .comment-section-popup button,
@@ -226,7 +231,8 @@ main {
   display: flex;
   position: fixed;
   inset: 0;
-  background: transparent;
+  background-color: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(4px);
   z-index: 1000;
   justify-content: center;
   align-items: center;
@@ -237,11 +243,26 @@ main {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: transparent;
+  background-color: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
+}
+
+#popupText {
+  width: 600px;   /* ancho fijo */
+  height: 100%;   /* ocupar todo el alto del contenedor */
+  font-size: 22px;
+  line-height: 1.6;
+  word-break: break-word;
+  padding: 50px;
+  box-sizing: border-box; /* asegura que el padding no sume extra */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 /* =========================
@@ -256,10 +277,11 @@ main {
   max-height: 90vh;
   background-color: #1c2833;
   border-radius: 8px;
-  padding: 20px;
+  padding: 20px 20px 0 20px;
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
+
 }
 
 .popup-content img {
@@ -522,7 +544,17 @@ main {
   border-radius: 8px;
   resize: vertical;
   font-size: 1rem;
-  height: 140px;
+  height: 200px;
+}
+.modal-content button{
+  padding: 5px;
+  background-color: #00d8ff;
+  border: none;
+  border-radius: 2px;
+  color: #000;
+  font-size: 1rem;
+  font-weight: bolder;
+  cursor: pointer;
 }
 .char-count {
   text-align: right;
@@ -610,19 +642,6 @@ main {
   max-width: min(900px, 95vw);
 }
 
-/* Bloque de texto completo dentro del popup */
-.popup-texto {
-  background: #2e2e2e;
-  color: #eee;
-  padding: 14px 16px;
-  border-radius: 12px;
-
-  white-space: pre-wrap;      /* respeta saltos y envuelve */
-  word-break: break-word;     /* corta palabras largas */
-  overflow-wrap: anywhere;    /* por si son cadenas sin espacios */
-  line-height: 1.55;
-  font-size: 1rem;
-}
 
 /* Evitar scroll horizontal en el panel derecho del popup */
 #popupDetails { overflow-x: hidden; }
@@ -647,23 +666,31 @@ main {
   text-align: center;
 }
 
-/* evita scroll horizontal en el panel derecho */
 #popupDetails { overflow-x: hidden; }
 
-/* Texto grande en popup con altura y ancho fijo */
-.popup-texto-fijo {
-  width: 450px;          /* mismo ancho que tus imágenes */
-  height: 380px;         /* misma altura que las imágenes */
-  background: #2e2e2e;
-  color: #eee;
-  padding: 20px;
+/* Bloque de texto con la misma altura que las imágenes */
+.popup-texto,
+.popup-texto-fijo,
+.popup-textbox {
+  width: 450px;          /* igual que las imágenes */
+  height: 90%;         /* misma altura que las imágenes */
+  background-color: var(--color-post, #2e2e2e);
+  color: #fff;
   border-radius: 8px;
+  padding: 20px;
+
+  display: flex;
+  align-items: center;   /* centrado vertical */
+  justify-content: center; /* centrado horizontal */
+  text-align: center;
+
   white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: anywhere;
-  overflow-y: auto;      /* scroll si hay mucho texto */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  overflow-y: auto;      /* scroll si el texto es largo */
+}
+
+
+.popup-left {
+  align-self: start !important; /* pega la columna arriba */
 }
